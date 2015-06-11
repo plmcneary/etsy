@@ -15,6 +15,7 @@ var buffer = require('vinyl-buffer');
 var tap = require('gulp-tap');
 var del = require('del');
 var watch = require('gulp-watch');
+var sourcemaps = require('gulp-sourcemaps');
 
 // Common patterns used throughout the gulp configuration
 var src = {
@@ -58,11 +59,11 @@ gulp.task('watch', function () {
   watch(src.allScss, function () {
     gulp.start('scss');
   });
-  
+
   watch(src.allImg, function () {
     gulp.start('img');
   });
-  
+
   watch(src.allFont, function () {
     gulp.start('font');
   });
@@ -100,9 +101,12 @@ gulp.task('js', function () {
     .external('jquery')
     .external('underscore')
     .external('backbone')
+    .external('parsleyjs')
     .bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/js'));
 });
 
@@ -112,6 +116,7 @@ gulp.task('js:vendor', function () {
     .require('jquery')
     .require('underscore')
     .require('backbone')
+    .require('parsleyjs')
     .bundle()
     .pipe(source('vendor.js'))
     .pipe(gulp.dest('./dist/js'));

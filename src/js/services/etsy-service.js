@@ -6,7 +6,7 @@ function EtsyService (spec) {
   if (!spec.apiKey) {
     throw new Error('An API key is required!');
   }
-  
+
   this.apiKey = spec.apiKey;
   this.baseUrl = 'https://openapi.etsy.com/' + (spec.apiVersion || 'v2');
 }
@@ -30,10 +30,37 @@ EtsyService.prototype = {
 
     return promise;
   },
-  
+
   // Gets listings from Etsy
-  listings: function () {
-    var url = this.baseUrl + '/listings/active.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
+  listings: function (args) {
+    args = args || {};
+
+    if(!(args.keywords)) {
+      var keywordsQuery = '';
+    }else {
+      var keywordsQuery = ('&keywords=' + encodeURIComponent(args.keywords));
+    }
+
+    if(!(args.min)) {
+      var minQuery = '';
+    }else {
+      var minQuery = ('&min_price=' + args.min);
+    }
+
+    if(!(args.max)) {
+      var maxQuery = '';
+    }else {
+      var maxQuery = ('&max_price=' + args.max);
+    }
+
+    var url = this.baseUrl + '/listings/active.js?includes=MainImage' + keywordsQuery + minQuery + maxQuery + '&api_key=' + this.apiKey + '&callback=?';
+    return this.fetchUrl(url);
+  },
+
+  //Get a single listing from Etsy
+  listing: function(id) {
+
+    var url = this.baseUrl + '/listings/' + id + '.js?includes=MainImage&api_key=' + this.apiKey + '&callback=?';
     return this.fetchUrl(url);
   }
 };

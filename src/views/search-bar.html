@@ -1,1 +1,6 @@
-<h1>Search bar goes here...</h1>
+<form class="search-listings">
+  <input name="keywords" placeholder="Search listings" value="<%- m.searchValues.keywords %>">
+  <input name="min-price" placeholder="Minimum price" value="<%- m.searchValues.min_price %>">
+  <input name="max-price" placeholder="Maximum price" value="<%- m.searchValues.max_price %>">
+</form>
+<button class="button">Submit</button>
